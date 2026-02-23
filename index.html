@@ -467,6 +467,121 @@
             transform: scale(1.05);
         }
 
+        /* Contact number modal */
+        .contact-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(44, 24, 16, 0.5);
+            backdrop-filter: blur(6px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .contact-modal-overlay.is-open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .contact-modal-card {
+            background: linear-gradient(180deg, #FDF8F3 0%, #FFF8F0 100%);
+            border-radius: 24px;
+            padding: 2.5rem;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.18), 0 0 0 1px rgba(139, 90, 60, 0.12);
+            text-align: center;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .contact-modal-overlay.is-open .contact-modal-card {
+            transform: scale(1);
+        }
+        .contact-modal-card .contact-modal-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #2D5016 0%, #1e3a0f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin: 0 auto 1.25rem;
+        }
+        .contact-modal-card h3 {
+            font-family: 'Georgia', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C1810;
+            margin-bottom: 0.5rem;
+        }
+        .contact-modal-card .contact-modal-sub {
+            font-size: 0.95rem;
+            color: #5D4037;
+            margin-bottom: 1.5rem;
+        }
+        .contact-modal-card .contact-modal-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2C1810;
+            letter-spacing: 0.02em;
+            margin-bottom: 1.5rem;
+        }
+        .contact-modal-card .contact-modal-number a {
+            color: inherit;
+            text-decoration: none;
+        }
+        .contact-modal-card .contact-modal-number a:hover {
+            color: #2D5016;
+            text-decoration: underline;
+        }
+        .contact-modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .contact-modal-actions .btn-call {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #2D5016 0%, #1e3a0f 100%);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(45, 80, 22, 0.35);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .contact-modal-actions .btn-call:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 80, 22, 0.4);
+        }
+        .contact-modal-actions .btn-close {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 50px;
+            background: white;
+            color: #5D4037;
+            border: 1px solid rgba(139, 90, 60, 0.2);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .contact-modal-actions .btn-close:hover {
+            background: #F5E6D3;
+            color: #2C1810;
+        }
+
         /* Responsive - Mobile First */
         
         /* Tablet and below (≤ 968px) */
@@ -707,14 +822,29 @@
             <ul class="nav-links">
                 <li><a href="#hero">Accueil</a></li>
                 <li><a href="#amenities">Équipements</a></li>
+                <li><a href="#domiciliation">Domiciliation</a></li>
                 <li><a href="#partners">Partenaires</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#" class="js-show-contact-number">Contact</a></li>
             </ul>
             <div class="nav-buttons">
                 <!-- REMOVED: Login/Register buttons - This is a static marketing site -->
             </div>
         </nav>
     </header>
+
+    <!-- Contact number modal (shown when user clicks Contact or any CTA) -->
+    <div id="contact-modal" class="contact-modal-overlay" aria-hidden="true">
+        <div class="contact-modal-card">
+            <div class="contact-modal-icon">📞</div>
+            <h3>Contactez The Barn</h3>
+            <p class="contact-modal-sub">Appelez-nous pour réserver ou en savoir plus</p>
+            <p class="contact-modal-number"><a href="tel:+21654451627">54 451 627</a></p>
+            <div class="contact-modal-actions">
+                <a href="https://wa.me/21654451627" target="_blank" rel="noopener" class="btn-call">WhatsApp</a>
+                <button type="button" class="btn-close" id="contact-modal-close">Fermer</button>
+            </div>
+        </div>
+    </div>
     
     <main>
         <!-- Hero Section - CONVERTED: PHP variables removed, hardcoded paths -->
@@ -735,19 +865,22 @@
                         Ateliers, Événements & Coworking à Soukra
                     </h1>
                     
-                    <!-- SIMPLIFIED: Short descriptive text - removed detailed metrics, amenities, and technical specs -->
+                    <!-- SIMPLIFIED: Short descriptive text - flexibility + long-term balance -->
                     <div style="font-size: clamp(1rem, 2.5vw, 1.25rem); color: rgba(255,255,255,0.95); margin-bottom: 2.5rem; line-height: 1.7; font-weight: 400; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                        <p style="margin-bottom: 0.75rem;">
+                            Disponible à la journée, à la demi-journée ou en partenariat récurrent selon vos besoins.
+                        </p>
                         <p style="margin-bottom: 0.75rem;">
                             <strong style="color: white;">Programmes récurrents, jours fixes.</strong> Une base stable pour votre organisation.
                         </p>
                         <p style="margin-bottom: 0;">
-                            Pas une location ponctuelle—<strong style="color: white;">votre base de formation permanente</strong>.
+                            Disponible en location ponctuelle ou en partenariat à long terme — une solution adaptée à votre organisation.
                         </p>
                     </div>
                     
                     <!-- PRIMARY CTA: "Discuter de votre programme de formation" -->
                     <div>
-                        <a href="#contact" class="btn btn-secondary" style="padding: clamp(1rem, 3vw, 1.125rem) clamp(1.5rem, 4vw, 2.5rem); font-size: clamp(0.95rem, 2vw, 1.0625rem); font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: inline-block; width: 100%; max-width: 100%; text-align: center;">
+                        <a href="#" class="btn btn-secondary js-show-contact-number" style="padding: clamp(1rem, 3vw, 1.125rem) clamp(1.5rem, 4vw, 2.5rem); font-size: clamp(0.95rem, 2vw, 1.0625rem); font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: inline-block; width: 100%; max-width: 100%; text-align: center;">
                             Discuter de votre programme de formation
                         </a>
                     </div>
@@ -821,14 +954,14 @@
                         </h3>
                         <p style="color: #5D4037; line-height: 1.65; font-size: 1rem; font-weight: 400;">
                             Un partenariat conçu pour les cabinets de formation, associations et clubs.<br>
-                            Pas une location ponctuelle — une base durable pour vos activités.
+                            Disponible en location ponctuelle ou en partenariat à long terme — une solution adaptée à votre organisation.
                         </p>
                     </div>
                 </div>
                 
                 <!-- PRIMARY CTA: "Discuter de votre programme de formation" -->
                 <div style="text-align: center;">
-                    <a href="#contact" class="btn btn-secondary" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: clamp(0.9rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem); border-radius: 10px; background: #FF6B35; color: white; text-decoration: none; font-weight: 600; font-size: clamp(0.9rem, 2vw, 0.95rem); box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3); width: 100%; max-width: 100%;">
+                    <a href="#" class="btn btn-secondary js-show-contact-number" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: clamp(0.9rem, 2vw, 1rem) clamp(1.5rem, 4vw, 2rem); border-radius: 10px; background: #FF6B35; color: white; text-decoration: none; font-weight: 600; font-size: clamp(0.9rem, 2vw, 0.95rem); box-shadow: 0 3px 10px rgba(255, 107, 53, 0.3); width: 100%; max-width: 100%;">
                         <span>Discuter de votre programme de formation</span>
                         <span style="font-size: 1rem;">→</span>
                     </a>
@@ -999,6 +1132,154 @@
         <!-- Divider Line -->
         <div style="border-top: 1px solid var(--border-color); margin: 0;"></div>
 
+        <!-- Location flexible pour vos besoins professionnels -->
+        <section id="location-flexible" style="margin: 0; padding: clamp(3rem, 8vw, 6rem) 0; background: white; position: relative;">
+            <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px);">
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; color: #2C1810; margin-bottom: 1.5rem; font-family: 'Georgia', serif; line-height: 1.3;">
+                        Location flexible pour vos besoins professionnels
+                    </h2>
+                    <p style="font-size: 1.1rem; color: #5D4037; line-height: 1.7; max-width: 800px; margin: 0 auto 1.25rem; font-weight: 400;">
+                        Notre espace s'adapte à votre format :
+                    </p>
+                    <ul style="font-size: 1.05rem; color: #5D4037; line-height: 1.8; max-width: 600px; margin: 0 auto 1.5rem; padding-left: 1.5rem; text-align: left; list-style: disc;">
+                        <li style="margin-bottom: 0.5rem;">Location à la journée ou demi-journée pour ateliers et réunions ponctuelles</li>
+                        <li style="margin-bottom: 0.5rem;">Programmes récurrents sur jours fixes</li>
+                        <li style="margin-bottom: 0.5rem;">Partenariats mensuels pour cabinets de formation</li>
+                        <li style="margin-bottom: 0.5rem;">Organisation d'événements professionnels</li>
+                    </ul>
+                    <p style="font-size: 1.1rem; color: #5D4037; line-height: 1.7; max-width: 800px; margin: 0 auto; font-weight: 400;">
+                        Que vous organisiez un atelier unique ou un programme structuré sur plusieurs mois, The Barn vous offre un cadre professionnel, équipé et flexible.
+                    </p>
+                </div>
+
+                <!-- 3 offer blocks -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 2.5rem;">
+                    <div style="padding: 2rem; background: #FDF8F3; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📅</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Location ponctuelle
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Idéal pour ateliers, réunions et événements uniques.
+                        </p>
+                    </div>
+                    <div style="padding: 2rem; background: #FDF8F3; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🔄</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Programmes récurrents
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Une base stable sur des jours fixes.
+                        </p>
+                    </div>
+                    <div style="padding: 2rem; background: #FDF8F3; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📍</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Domiciliation d'entreprise
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Adresse professionnelle et gestion du courrier.
+                        </p>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="#" class="btn js-show-contact-number" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: clamp(1rem, 2.5vw, 1.125rem) clamp(1.5rem, 4vw, 2.5rem); border-radius: 50px; background: linear-gradient(135deg, #2D5016 0%, #1e3a0f 100%); color: white; text-decoration: none; font-weight: 600; font-size: clamp(0.95rem, 2vw, 1rem); box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3); transition: all 0.3s ease;">
+                        <span>Réserver une date</span>
+                        <span style="font-size: 1.2rem;">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider Line -->
+        <div style="border-top: 1px solid var(--border-color); margin: 0;"></div>
+
+        <!-- Domiciliation d'entreprise / Bureau virtuel -->
+        <section id="domiciliation" style="margin: 0; padding: clamp(3rem, 8vw, 6rem) 0; background: #FDF8F3;">
+            <div class="container" style="max-width: 1400px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px);">
+                <div style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; color: #2C1810; margin-bottom: 1rem; font-family: 'Georgia', serif; line-height: 1.3;">
+                        Domiciliation d'entreprise à Soukra – Ariana
+                    </h2>
+                    <p style="font-size: 1.15rem; color: #5D4037; line-height: 1.7; max-width: 800px; margin: 0 auto 1rem; font-weight: 400;">
+                        The Barn propose un service de domiciliation d'entreprise au sein de son centre d'affaires à Soukra, Ariana.
+                    </p>
+                    <p style="font-size: 1.15rem; color: #5D4037; line-height: 1.7; max-width: 800px; margin: 0 auto; font-weight: 400;">
+                        Une solution idéale pour les entrepreneurs, startups et cabinets souhaitant bénéficier d'une adresse professionnelle stable dans un environnement structuré.
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+                    <!-- Adresse professionnelle -->
+                    <div style="padding: 2rem; background: white; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📍</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Adresse professionnelle
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Une adresse commerciale à Soukra pour votre société, renforçant votre crédibilité auprès de vos clients et partenaires.
+                        </p>
+                    </div>
+
+                    <!-- Gestion du courrier -->
+                    <div style="padding: 2rem; background: white; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📬</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Gestion du courrier
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Réception et gestion de votre courrier professionnel avec notification à la réception.
+                        </p>
+                    </div>
+
+                    <!-- Contrat conforme -->
+                    <div style="padding: 2rem; background: white; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">📄</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Contrat conforme
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Contrat de domiciliation conforme aux exigences légales en Tunisie.
+                        </p>
+                    </div>
+
+                    <!-- Accès ponctuel -->
+                    <div style="padding: 2rem; background: white; border-radius: 16px; border: 1px solid rgba(139, 90, 60, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.06); text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">🚪</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: #2C1810; margin-bottom: 0.75rem; font-family: 'Inter', sans-serif;">
+                            Accès ponctuel
+                        </h3>
+                        <p style="color: #5D4037; font-size: 0.95rem; line-height: 1.6;">
+                            Possibilité d'utiliser la salle de réunion selon disponibilité (en option).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pricing block -->
+                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: white; border-radius: 20px; border: 1px solid rgba(139, 90, 60, 0.15); box-shadow: 0 4px 20px rgba(0,0,0,0.08); max-width: 500px; margin-left: auto; margin-right: auto;">
+                    <p style="font-size: 1.5rem; font-weight: 700; color: #2C1810; margin-bottom: 0.5rem; font-family: 'Inter', sans-serif;">
+                        Tarif : 430 TND TTC / an
+                    </p>
+                    <p style="font-size: 0.95rem; color: #5D4037; line-height: 1.5; margin: 0;">
+                        Solution simple, claire et transparente pour établir votre siège social.
+                    </p>
+                </div>
+
+                <!-- CTA -->
+                <div style="text-align: center; margin-top: 2.5rem;">
+                    <a href="#" class="btn js-show-contact-number" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: clamp(1rem, 2.5vw, 1.125rem) clamp(1.5rem, 4vw, 2.5rem); border-radius: 50px; background: linear-gradient(135deg, #2D5016 0%, #1e3a0f 100%); color: white; text-decoration: none; font-weight: 600; font-size: clamp(0.95rem, 2vw, 1rem); box-shadow: 0 4px 15px rgba(45, 80, 22, 0.3); transition: all 0.3s ease;">
+                        <span>Demander les conditions de domiciliation</span>
+                        <span style="font-size: 1.2rem;">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider Line -->
+        <div style="border-top: 1px solid var(--border-color); margin: 0;"></div>
+
         <!-- NEW: "What happens next" Reassurance Block -->
         <section id="next-steps" style="margin: 0; padding: clamp(3rem, 6vw, 5rem) 0; background: #FDF8F3;">
             <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 0 40px;">
@@ -1074,7 +1355,7 @@
                     <p style="font-size: 1.15rem; color: rgba(255, 255, 255, 0.9); margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">
                         Partenariat à long terme avec The Barn pour programmes de formation récurrents. Jours fixes, même configuration, environnement professionnel. Une base stable pour votre organisation.
                     </p>
-                    <a href="#contact" class="btn" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: clamp(1rem, 2.5vw, 1.125rem) clamp(1.5rem, 4vw, 2.5rem); border-radius: 50px; background: white; color: #2D5016; text-decoration: none; font-weight: 600; font-size: clamp(0.95rem, 2vw, 1rem); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; width: 100%; max-width: 100%;">
+                    <a href="#" class="btn js-show-contact-number" style="display: inline-flex; align-items: center; justify-content: center; gap: 0.75rem; padding: clamp(1rem, 2.5vw, 1.125rem) clamp(1.5rem, 4vw, 2.5rem); border-radius: 50px; background: white; color: #2D5016; text-decoration: none; font-weight: 600; font-size: clamp(0.95rem, 2vw, 1rem); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: all 0.3s ease; width: 100%; max-width: 100%;">
                         <span>Discuter de votre programme de formation</span>
                         <span style="font-size: 1.2rem;">→</span>
                     </a>
@@ -1103,7 +1384,7 @@
                     </div>
                     <div class="footer-contact-item">
                         <div class="footer-contact-icon">📞</div>
-                        <div class="footer-contact-text"><a href="tel:+21654451627">+216 54 45 16 27</a></div>
+                        <div class="footer-contact-text"><a href="tel:+21654451627">54 451 627</a></div>
                     </div>
                     <div class="footer-contact-item">
                         <div class="footer-contact-icon">💬</div>
@@ -1121,19 +1402,47 @@
         </footer>
     </main>
 
-    <!-- CONVERTED: Smooth scrolling JavaScript - No PHP logic -->
     <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Contact number modal: show when Contact or any CTA is clicked
+        var contactModal = document.getElementById('contact-modal');
+        var contactModalClose = document.getElementById('contact-modal-close');
+        function openContactModal() {
+            if (contactModal) {
+                contactModal.classList.add('is-open');
+                contactModal.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        function closeContactModal() {
+            if (contactModal) {
+                contactModal.classList.remove('is-open');
+                contactModal.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+        }
+        document.querySelectorAll('.js-show-contact-number').forEach(function (el) {
+            el.addEventListener('click', function (e) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                openContactModal();
+            });
+        });
+        if (contactModalClose) contactModalClose.addEventListener('click', closeContactModal);
+        contactModal && contactModal.addEventListener('click', function (e) {
+            if (e.target === contactModal) closeContactModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && contactModal && contactModal.classList.contains('is-open')) closeContactModal();
+        });
+
+        // Smooth scrolling for other anchor links (not contact modal triggers)
+        document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+            if (anchor.classList.contains('js-show-contact-number')) return;
+            anchor.addEventListener('click', function (e) {
+                var href = this.getAttribute('href');
+                if (href === '#') return;
+                e.preventDefault();
+                var target = document.querySelector(href);
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     </script>
